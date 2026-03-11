@@ -1,0 +1,20 @@
+# Julia MCP Sidecar Installer
+#
+# Minimal image used exclusively for package installation.
+# Has network access (--network bridge) so Pkg.add() can reach pkg.julialang.org.
+# Shares the julia-depot volume with the execution container — packages installed
+# here become immediately available to the execution container.
+#
+# NEVER used for code execution. Never starts a server. Never mounts scratch.
+FROM julia:1.12.5-bookworm
+
+RUN useradd -m -s /bin/bash julia_agent
+USER julia_agent
+WORKDIR /home/julia_agent
+
+ENV JULIA_NUM_THREADS=auto
+# JULIA_DEPOT_PATH must match the volume mount point used at runtime
+ENV JULIA_DEPOT_PATH=/home/julia_agent/.julia
+
+# No CMD — invoked via: docker run --rm -v julia-depot:/home/julia_agent/.julia
+#   julia-mcp-installer julia -e 'using Pkg; Pkg.add("Name"); Pkg.precompile()'

@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(npm run build)",
+      "Bash(docker ps -a --format \"table {{.Names}}\\\\t{{.Status}}\\\\t{{.Image}}\")",
+      "Bash(docker volume ls)",
+      "Bash(docker run --rm -v julia-depot:/depot julia-mcp-sandbox ls /depot)",
+      "Bash(MSYS_NO_PATHCONV=1 docker run --rm -v julia-depot:/depot julia-mcp-sandbox ls /depot)",
+      "Bash(MSYS_NO_PATHCONV=1 docker run --rm -v julia-depot:/depot julia-mcp-sandbox ls -la /depot)",
+      "Bash(MSYS_NO_PATHCONV=1 docker run --rm -v julia-depot:/depot julia-mcp-sandbox test -f /depot/.seeded)",
+      "Bash(MSYS_NO_PATHCONV=1 docker run --rm -v julia-depot:/home/julia_agent/.julia -v \"C:/Users/mthel/julia-scratch:/home/julia_agent/scratch\" julia-mcp-sandbox sh -c \"echo ''bind mounts work''\")",
+      "Bash(MSYS_NO_PATHCONV=1 docker run --rm -v julia-depot:/home/julia_agent/.julia julia-mcp-sandbox sh -c \"test -f /home/julia_agent/.julia/.seeded && echo seeded || echo not-seeded\")",
+      "Bash(MSYS_NO_PATHCONV=1 docker run --rm -v julia-depot:/depot julia-mcp-sandbox touch /depot/.seeded)",
+      "Bash(docker network inspect julia-mcp-net)",
+      "Bash(docker network create --internal --driver bridge julia-mcp-net)",
+      "Bash(python -c \"import sys,json; n=json.load\\(sys.stdin\\); [print\\(k, v.get\\(''IPAddress''\\), v.get\\(''Ports''\\)\\) for k,v in n.get\\(''Networks'',{}\\).items\\(\\)]\")",
+      "Bash(docker run --rm --network julia-mcp-net julia-mcp-sandbox julia -e \"using Sockets; s = connect\\(\"\"172.18.0.2\"\", 2625\\); println\\(\"\"connected\"\"\\); close\\(s\\)\")",
+      "Bash(docker exec julia-mcp-exec sh -c \"ss -tlnp 2>/dev/null || netstat -tlnp 2>/dev/null\")",
+      "Bash(docker exec julia-mcp-exec sh -c \"cat /proc/net/tcp6 2>/dev/null | head -5 || cat /proc/net/tcp 2>/dev/null | head -5\")",
+      "Bash(docker exec julia-mcp-exec sh -c \"cat /proc/net/tcp6\")",
+      "Bash(docker rm -f julia-mcp-exec)",
+      "Bash(docker rmi julia-mcp-sandbox)",
+      "Bash(docker build -t julia-mcp-sandbox /c/Users/mthel/TypeScript/julia-mcp-server)",
+      "Bash(MSYS_NO_PATHCONV=1 docker run --rm julia-mcp-sandbox grep \"listen\" /home/julia_agent/server.jl)",
+      "Bash(docker exec julia-mcp-exec julia --version)",
+      "Bash(docker exec julia-mcp-exec julia -e 'buf = IOBuffer\\(\\); redirect_stdout\\(buf\\) do; println\\(\"\"test\"\"\\); end; println\\(String\\(take!\\(buf\\)\\)\\)')",
+      "Bash(docker exec julia-mcp-exec julia -e ':*)",
+      "Bash(docker exec julia-mcp-exec julia -e 'orig=stdout; rd,wr=redirect_stdout\\(\\); println\\(\"\"hi\"\"\\); flush\\(stdout\\); redirect_stdout\\(orig\\); close\\(wr\\); println\\(read\\(rd,String\\)\\); close\\(rd\\)')",
+      "Bash(docker exec julia-mcp-exec julia -e 'orig_o=stdout; orig_e=stderr; rd_o,wr_o=redirect_stdout\\(\\); rd_e,wr_e=redirect_stderr\\(\\); println\\(\"\"out\"\"\\); println\\(stderr,\"\"err\"\"\\); flush\\(stdout\\); flush\\(stderr\\); redirect_stdout\\(orig_o\\); redirect_stderr\\(orig_e\\); close\\(wr_o\\); close\\(wr_e\\); println\\(\"\"stdout: \"\", repr\\(read\\(rd_o,String\\)\\)\\); println\\(\"\"stderr: \"\", repr\\(read\\(rd_e,String\\)\\)\\)')",
+      "Bash(MSYS_NO_PATHCONV=1 docker run --rm julia-mcp-sandbox grep -A5 \"execute_code\" /home/julia_agent/server.jl)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(where npm)",
+      "Bash(node --version)",
+      "Bash(ls C:/Users/mthel/TypeScript/julia-mcp-server/node_modules/.bin/tsc*)",
+      "Bash(npx tsc --noEmit)"
+    ]
+  }
+}
