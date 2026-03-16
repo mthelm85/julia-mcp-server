@@ -1,6 +1,6 @@
 # julia-mcp-server
 
-An [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server that gives LLM clients access to a hardened, stateful Julia execution environment running in Docker.
+An [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server that gives LLM clients access to a stateful Julia execution environment running in Docker.
 
 ## How it works
 
