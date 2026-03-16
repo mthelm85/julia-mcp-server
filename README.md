@@ -77,9 +77,16 @@ Add to your MCP settings (e.g. `~/.claude/mcp_settings.json`):
 }
 ```
 
+### Environment variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `JULIA_NETWORK` | `bridge` | Network mode for the execution container. Set to `none` to disable outbound internet access. |
+| `JULIA_SCRATCH_PATH` | `~/julia-scratch` | Host path for the scratch directory mounted into the container. |
+
 ## Security
 
-- The execution container runs on Docker's default bridge network, allowing outbound internet access during code execution.
+- The execution container runs on Docker's default bridge network, allowing outbound internet access during code execution. Set `JULIA_NETWORK=none` to disable this.
 - A per-session random UUID auth token is generated at startup and required on every request to the Julia TCP server, preventing other local processes from submitting code.
 - All Docker CLI calls use array arguments via `execa` (no shell interpolation), preventing command injection.
 - Package names are validated against a strict regex (`^[A-Za-z][A-Za-z0-9_]*$`) before being passed to `Pkg.add()`.

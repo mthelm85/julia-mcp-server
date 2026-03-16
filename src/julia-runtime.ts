@@ -48,6 +48,13 @@ const MAX_RESPONSE_BYTES = 10 * 1024 * 1024; // 10 MB
 const SCRATCH_HOST = process.env.JULIA_SCRATCH_PATH
   ?? path.join(os.homedir(), 'julia-scratch').replace(/\\/g, '/');
 
+/**
+ * Network mode for the execution container.
+ * Set JULIA_NETWORK=none to disable outbound internet access.
+ * Defaults to 'bridge' (full outbound access).
+ */
+const NETWORK_MODE = process.env.JULIA_NETWORK === 'none' ? 'none' : 'bridge';
+
 // ── Types ──────────────────────────────────────────────────────────────────────
 
 export interface JuliaResult {
@@ -144,6 +151,7 @@ async function startExecutionContainer(): Promise<void> {
     '--name', CONTAINER_NAME,
     '--memory', '4g',
     '--cpus', '2.0',
+    '--network', NETWORK_MODE,
     '-p', `127.0.0.1:${JULIA_PORT}:${JULIA_PORT}`,
     '--env', `JULIA_MCP_TOKEN=${AUTH_TOKEN}`,
     '-v', `${DEPOT_VOLUME}:/home/julia_agent/.julia`,
