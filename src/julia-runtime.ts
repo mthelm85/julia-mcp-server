@@ -2,7 +2,7 @@
  * Julia Runtime — Docker communication layer
  *
  * Manages the lifecycle of two Docker artifacts:
- *   - julia-mcp-sandbox  : persistent execution container, --network none, port 2625
+ *   - julia-mcp-sandbox  : persistent execution container, bridge network, port 2625
  *   - julia-mcp-installer: ephemeral sidecar, --network bridge, used only for Pkg.add
  *
  * Both share the "julia-depot" named volume so installed packages are immediately

@@ -42,8 +42,7 @@ server.tool(
 
 server.tool(
   'install_julia_package',
-  'Install a Julia package into the sandbox. Requires approval. Network access is ' +
-  'scoped to the installer sidecar — the execution container remains air-gapped. ' +
+  'Install a Julia package into the sandbox. Requires approval. ' +
   'The package is available immediately after installation without resetting the session.',
   {
     package_name: z.string().describe('Julia package name, e.g. "Symbolics" or "Flux"'),
