@@ -84,6 +84,22 @@ Add to your MCP settings (e.g. `~/.claude/mcp_settings.json`):
 | `JULIA_NETWORK` | `bridge` | Network mode for the execution container. Set to `none` to disable outbound internet access. |
 | `JULIA_SCRATCH_PATH` | `~/julia-scratch` | Host path for the scratch directory mounted into the container. |
 
+To air-gap the execution container (no outbound internet access):
+
+```json
+{
+  "mcpServers": {
+    "julia": {
+      "command": "node",
+      "args": ["/path/to/julia-mcp-server/dist/index.js"],
+      "env": {
+        "JULIA_NETWORK": "none"
+      }
+    }
+  }
+}
+```
+
 ## Security
 
 - The execution container runs on Docker's default bridge network, allowing outbound internet access during code execution. Set `JULIA_NETWORK=none` to disable this.
