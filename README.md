@@ -40,6 +40,7 @@ Docker images are built automatically on first use. This takes several minutes t
 | Tool | Description |
 |------|-------------|
 | `run_julia_code` | Execute Julia code in the persistent sandbox. State (variables, functions, loaded modules) persists across calls within the same session. |
+| `analyze_julia_code` | Statically analyze a Julia function call with JET.jl. Returns `@report_call` (type/method errors) and `@report_opt` (type instabilities, runtime dispatch) reports. |
 | `install_julia_package` | Install a package via the network-enabled sidecar. Available immediately after install without resetting the session. |
 | `reset_julia_session` | Restart the execution container, clearing all session state. Previously installed packages survive. |
 
@@ -47,9 +48,52 @@ Docker images are built automatically on first use. This takes several minutes t
 
 The sandbox image ships with these packages precompiled:
 
-`DataFrames`, `CSV`, `JSON3`, `JuMP`, `HiGHS`, `StatsBase`, `Distributions`, `CairoMakie`, `Turing`, `Revise`, `PackageCompiler`, `DaemonMode`
+**Core:** `DataFrames`, `CSV`, `JSON3`, `JuMP`, `HiGHS`, `StatsBase`, `Distributions`, `CairoMakie`, `Turing`, `Revise`, `PackageCompiler`, `DaemonMode`
+
+**Debugging & analysis:** `JET`, `Cthulhu`, `Infiltrator`
 
 Julia standard library is always available: `LinearAlgebra`, `Statistics`, `Random`, `Dates`, `Printf`, `Base`.
+
+### Debugging tools
+
+The three debugging packages are pre-installed and guided by the tool descriptions — the LLM is directed to reach for them in specific failure scenarios.
+
+**JET** — static analysis before execution. Use `analyze_julia_code` for structured reports, or inline:
+
+```julia
+using JET
+@report_call myfunction(arg1, arg2)   # catches MethodError, UndefVarError at compile time
+@report_opt  myfunction(arg1, arg2)   # finds type instabilities and runtime dispatch
+```
+
+Trigger: `MethodError`, unexpected `Union` return types, unexplained slowness.
+
+**Infiltrator** — inspect local variables mid-function without a REPL:
+
+```julia
+using Infiltrator
+
+function myfunction(x)
+    y = transform(x)
+    @exfiltrate          # captures all locals into Infiltrator.store
+    return y
+end
+
+myfunction(input)
+Infiltrator.store.x     # access captured variable by name
+Infiltrator.store.y
+```
+
+Trigger: wrong output, logic errors, need to see intermediate state inside a function.
+
+**Cthulhu** — deep non-interactive type-inference dump:
+
+```julia
+using Cthulhu
+@descend_code_typed myfunction(arg1)  # prints fully inferred, annotated IR
+```
+
+Trigger: mysterious inference failures, unexpected type specializations, subtle `Union` proliferation.
 
 ### Plots / file output
 
@@ -84,7 +128,7 @@ Add to your MCP settings (e.g. `~/.claude/mcp_settings.json`):
 | `JULIA_NETWORK` | `bridge` | Network mode for the execution container. Set to `none` to disable outbound internet access. |
 | `JULIA_SCRATCH_PATH` | `~/julia-scratch` | Host path for the scratch directory mounted into the container. |
 
-To air-gap the execution container (no outbound internet access):
+To isolate the execution container (no outbound internet access):
 
 ```json
 {

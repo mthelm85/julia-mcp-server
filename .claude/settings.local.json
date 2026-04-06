@@ -33,7 +33,12 @@
       "Bash(where npm)",
       "Bash(node --version)",
       "Bash(ls C:/Users/mthel/TypeScript/julia-mcp-server/node_modules/.bin/tsc*)",
-      "Bash(npx tsc --noEmit)"
+      "Bash(npx tsc --noEmit)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(node -e \"import\\(''@modelcontextprotocol/sdk/server/mcp.js''\\).then\\(m => console.log\\(Object.getOwnPropertyNames\\(m.McpServer.prototype\\)\\)\\)\")",
+      "Bash(node -e \":*)"
     ]
   }
 }

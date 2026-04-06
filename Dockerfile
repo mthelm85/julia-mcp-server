@@ -35,7 +35,8 @@ RUN julia -e 'using Pkg; \
         "CairoMakie", \
         "Revise", "PackageCompiler", \
         "DaemonMode", \
-        "Turing", "Distributions" \
+        "Turing", "Distributions", \
+        "JET", "Cthulhu", "Infiltrator" \
     ]); \
     Pkg.precompile()'
 
