@@ -52,49 +52,6 @@ The sandbox image ships with these packages precompiled:
 
 **Debugging & analysis:** `JET`, `Cthulhu`, `Infiltrator`
 
-Julia standard library is always available: `LinearAlgebra`, `Statistics`, `Random`, `Dates`, `Printf`, `Base`.
-
-### Debugging tools
-
-The three debugging packages are pre-installed and guided by the tool descriptions — the LLM is directed to reach for them in specific failure scenarios.
-
-**JET** — static analysis before execution. Use `analyze_julia_code` for structured reports, or inline:
-
-```julia
-using JET
-@report_call myfunction(arg1, arg2)   # catches MethodError, UndefVarError at compile time
-@report_opt  myfunction(arg1, arg2)   # finds type instabilities and runtime dispatch
-```
-
-Trigger: `MethodError`, unexpected `Union` return types, unexplained slowness.
-
-**Infiltrator** — inspect local variables mid-function without a REPL:
-
-```julia
-using Infiltrator
-
-function myfunction(x)
-    y = transform(x)
-    @exfiltrate          # captures all locals into Infiltrator.store
-    return y
-end
-
-myfunction(input)
-Infiltrator.store.x     # access captured variable by name
-Infiltrator.store.y
-```
-
-Trigger: wrong output, logic errors, need to see intermediate state inside a function.
-
-**Cthulhu** — deep non-interactive type-inference dump:
-
-```julia
-using Cthulhu
-@descend_code_typed myfunction(arg1)  # prints fully inferred, annotated IR
-```
-
-Trigger: mysterious inference failures, unexpected type specializations, subtle `Union` proliferation.
-
 ### Plots / file output
 
 Plots and other files written to `/home/julia_agent/scratch/` inside the container are mapped to `~/julia-scratch/` on the host. Override the host path with the `JULIA_SCRATCH_PATH` environment variable.
